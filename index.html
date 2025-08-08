@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Pharma Solutions - Transforming Healthcare Operations</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Flowbite -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.0.0/dist/flowbite.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Theme Styles -->
+    <link rel="stylesheet" href="pharma_theme.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans) !important;
+            background: var(--background) !important;
+            color: var(--foreground) !important;
+            overflow-x: hidden;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, 
+                oklch(0.2000 0.0050 0 / 0.05) 0%, 
+                oklch(0.7800 0.1200 85.0000 / 0.08) 50%,
+                transparent 100%);
+        }
+        
+        .feature-card {
+            background: var(--card) !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        
+        .primary-btn {
+            background: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 0.2s ease-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.1);
+        }
+        
+        .secondary-btn {
+            background: transparent !important;
+            color: var(--primary) !important;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 0.2s ease-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .secondary-btn {
+                padding: 0.75rem 2rem;
+            }
+        }
+        
+        .secondary-btn:hover {
+            background: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .stat-card:hover div:first-child {
+            color: white !important;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px oklch(0.7800 0.1200 85.0000 / 0.4); }
+            50% { box-shadow: 0 0 40px oklch(0.7800 0.1200 85.0000 / 0.6); }
+        }
+        
+        .glow-effect {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        .nav-link {
+            color: var(--foreground) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background: var(--accent);
+            color: var(--accent-foreground) !important;
+        }
+        
+        .client-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .client-logo-placeholder {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .client-logo-placeholder:hover {
+            opacity: 1;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+        
+        .benefit-item:hover {
+            background: var(--muted);
+            transform: translateX(10px);
+        }
+        
+        .metric-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b" style="border-color: var(--border);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <img src="Logo.png" alt="GenAI Pharma" class="h-8 md:h-10 w-auto">
+                    </div>
+                    <div class="hidden md:flex ml-10 space-x-2">
+                        <a href="#solutions" class="nav-link">Solutions</a>
+                        <a href="#use-cases" class="nav-link">Use Cases</a>
+                        <a href="#clients" class="nav-link">Clients</a>
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button class="hidden sm:flex secondary-btn text-sm md:text-base">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <span class="hidden md:inline">Book Demo</span>
+                        <span class="md:hidden">Demo</span>
+                    </button>
+                    <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="#solutions" class="nav-link block">Solutions</a>
+                    <a href="#use-cases" class="nav-link block">Use Cases</a>
+                    <a href="#clients" class="nav-link block">Clients</a>
+                    <a href="#contact" class="nav-link block">Contact</a>
+                    <button class="sm:hidden primary-btn w-full mt-2">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        Book Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="hero-gradient absolute inset-0"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background: var(--accent); color: var(--accent-foreground);">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span class="text-sm font-medium">Enterprise GenAI Solutions</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Transform<br/>
+                    <span style="color: var(--primary);">Pharmaceutical Operations</span><br/>
+                    with GenAI
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" style="color: var(--muted-foreground);">
+                    Empower your HCP engagement, medical affairs, marketing, HR, and data analytics 
+                    with cutting-edge generative AI solutions tailored for pharmaceutical excellence.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="primary-btn text-lg">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        Get Started Today
+                    </button>
+                    <button class="secondary-btn text-lg">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i>
+                        Watch 5-Min Demo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-20">
+                <div class="stat-card float-animation">
+                    <div class="text-3xl font-bold" style="color: var(--primary);">75%</div>
+                    <div class="text-sm mt-2" style="color: var(--muted-foreground);">HCP Engagement Increase</div>
+                </div>
+                <div class="stat-card float-animation" style="animation-delay: 0.5s;">
+                    <div class="text-3xl font-bold" style="color: var(--secondary);">60%</div>
+                    <div class="text-sm mt-2" style="color: var(--muted-foreground);">Faster Medical Insights</div>
+                </div>
+                <div class="stat-card float-animation" style="animation-delay: 1s;">
+                    <div class="text-3xl font-bold" style="color: var(--primary);">3x</div>
+                    <div class="text-sm mt-2" style="color: var(--muted-foreground);">Marketing ROI</div>
+                </div>
+                <div class="stat-card float-animation" style="animation-delay: 1.5s;">
+                    <div class="text-3xl font-bold" style="color: var(--secondary);">40%</div>
+                    <div class="text-sm mt-2" style="color: var(--muted-foreground);">HR Efficiency Gain</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Solutions Section -->
+    <section id="solutions" class="py-20" style="background: var(--muted);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">GenAI-Powered Solutions</h2>
+                <p class="text-xl" style="color: var(--muted-foreground);">
+                    Comprehensive AI solutions designed for pharmaceutical excellence
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- HCP Engagement -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--primary);">
+                        <i data-lucide="users" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">HCP Engagement</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        AI-powered personalization for healthcare professional interactions, delivering the right content at the right time.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• Predictive engagement scoring</li>
+                        <li>• Automated content recommendations</li>
+                        <li>• Multi-channel orchestration</li>
+                        <li>• Real-time interaction analytics</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                            75% engagement increase
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Medical Affairs -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--secondary);">
+                        <i data-lucide="stethoscope" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Medical Affairs</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        Streamline medical information management and accelerate scientific communications with GenAI.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• Automated literature monitoring</li>
+                        <li>• Medical inquiry response system</li>
+                        <li>• KOL insights extraction</li>
+                        <li>• Evidence synthesis automation</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            60% faster insights
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Marketing -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--primary);">
+                        <i data-lucide="megaphone" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Marketing Excellence</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        Create compelling, compliant content at scale with AI-driven marketing automation.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• Content generation & optimization</li>
+                        <li>• Campaign performance prediction</li>
+                        <li>• Regulatory compliance checking</li>
+                        <li>• Omnichannel journey mapping</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="target" class="w-4 h-4"></i>
+                            3x ROI improvement
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- HR Operations -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--secondary);">
+                        <i data-lucide="briefcase" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">HR Transformation</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        Revolutionize talent management and employee experience with intelligent HR solutions.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• AI-powered talent acquisition</li>
+                        <li>• Personalized learning paths</li>
+                        <li>• Employee sentiment analysis</li>
+                        <li>• Automated HR workflows</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="users-2" class="w-4 h-4"></i>
+                            40% efficiency gain
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Data Insights -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--primary);">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Data Intelligence</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        Transform raw data into actionable insights with advanced analytics and predictive modeling.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• Real-world evidence analysis</li>
+                        <li>• Predictive market analytics</li>
+                        <li>• Competitive intelligence</li>
+                        <li>• Automated reporting dashboards</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="database" class="w-4 h-4"></i>
+                            10x data processing
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Integration Hub -->
+                <div class="feature-card">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 glow-effect" style="background: var(--secondary);">
+                        <i data-lucide="git-merge" class="w-6 h-6" style="color: var(--primary-foreground);"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Integration Hub</h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                        Seamlessly connect all your systems with our enterprise-ready integration platform.
+                    </p>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li>• CRM & ERP integration</li>
+                        <li>• API-first architecture</li>
+                        <li>• Real-time data sync</li>
+                        <li>• Custom workflow automation</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span class="metric-badge">
+                            <i data-lucide="link" class="w-4 h-4"></i>
+                            100+ integrations
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="py-20" style="background: var(--muted);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Use Cases</h2>
+                <p class="text-xl" style="color: var(--muted-foreground);">
+                    Discover our flagship AI-powered platforms transforming healthcare in Italy
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- MedQuestio.it -->
+                <div class="feature-card">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-lg flex-shrink-0 flex items-center justify-center glow-effect" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                            <i data-lucide="stethoscope" class="w-8 h-8" style="color: var(--primary-foreground);"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-3">MedQuestio.it</h3>
+                            <p class="text-lg mb-4" style="color: var(--primary); font-weight: 600;">
+                                Italy's Largest AI-Powered Medical Portal
+                            </p>
+                            <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                                The premier Italian platform leveraging advanced AI to provide comprehensive support 
+                                for healthcare professionals across the nation, revolutionizing medical practice with 
+                                intelligent insights and real-time assistance.
+                            </p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="text-center p-3 rounded-lg" style="background: var(--background);">
+                                    <div class="text-2xl font-bold" style="color: var(--primary);">10,000+</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">General Practitioners</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg" style="background: var(--background);">
+                                    <div class="text-2xl font-bold" style="color: var(--secondary);">3,000+</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Pediatricians</div>
+                                </div>
+                            </div>
+                            
+                            <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--primary);"></i>
+                                    <span>AI-powered clinical decision support system</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--primary);"></i>
+                                    <span>Real-time medical guidelines and protocol updates</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--primary);"></i>
+                                    <span>Integrated continuing medical education platform</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--primary);"></i>
+                                    <span>24/7 AI medical assistant for complex cases</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="mt-6">
+                                <button class="primary-btn">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                    Visit MedQuestio.it
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ChatMyPaper -->
+                <div class="feature-card">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-lg flex-shrink-0 flex items-center justify-center glow-effect" style="background: linear-gradient(135deg, var(--secondary), var(--accent));">
+                            <i data-lucide="file-text" class="w-8 h-8" style="color: var(--primary-foreground);"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-3">ChatMyPaper</h3>
+                            <p class="text-lg mb-4" style="color: var(--secondary); font-weight: 600;">
+                                AI Assistant for Medical Specialists
+                            </p>
+                            <p style="color: var(--muted-foreground); margin-bottom: 1rem;">
+                                Revolutionary platform empowering medical specialists with instant access to the latest 
+                                research, intelligent paper analysis, and evidence-based insights to enhance clinical 
+                                decision-making and patient care.
+                            </p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="text-center p-3 rounded-lg" style="background: var(--background);">
+                                    <div class="text-2xl font-bold" style="color: var(--primary);">1M+</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Papers Analyzed</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg" style="background: var(--background);">
+                                    <div class="text-2xl font-bold" style="color: var(--secondary);">15 sec</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Average Response</div>
+                                </div>
+                            </div>
+                            
+                            <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--secondary);"></i>
+                                    <span>Instant analysis of medical research papers</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--secondary);"></i>
+                                    <span>AI-powered literature review and synthesis</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--secondary);"></i>
+                                    <span>Personalized research recommendations</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color: var(--secondary);"></i>
+                                    <span>Multi-language medical document support</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="mt-6">
+                                <button class="primary-btn">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                    Explore ChatMyPaper
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section id="clients" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Trusted by Leading Pharmaceutical Companies</h2>
+                <p class="text-xl" style="color: var(--muted-foreground);">
+                    Empowering the world's top pharmaceutical companies with GenAI solutions
+                </p>
+            </div>
+            
+            <!-- Client Logos Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 items-center">
+                <!-- Logo placeholders - actual logos to be added manually -->
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 1</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 2</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 3</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 4</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 5</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 6</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 7</span>
+                    </div>
+                </div>
+                
+                <div class="client-logo-container">
+                    <div class="client-logo-placeholder">
+                        <span style="color: var(--muted-foreground);">Client Logo 8</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Partnership Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2" style="color: var(--primary);">50+</div>
+                    <p style="color: var(--muted-foreground);">Global Pharmaceutical Partners</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2" style="color: var(--secondary);">15</div>
+                    <p style="color: var(--muted-foreground);">Top 20 Pharma Companies</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2" style="color: var(--primary);">100M+</div>
+                    <p style="color: var(--muted-foreground);">HCP Interactions Powered</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-6" style="color: var(--primary-foreground);">
+                Ready to Transform Your Pharmaceutical Operations?
+            </h2>
+            <p class="text-xl mb-8" style="color: var(--primary-foreground); opacity: 0.9;">
+                Join industry leaders leveraging GenAI to revolutionize HCP engagement, 
+                medical affairs, marketing, HR, and data insights.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="px-8 py-4 rounded-lg font-semibold text-lg transition-all hover:scale-105" style="background: white; color: var(--primary);">
+                    <i data-lucide="calendar" class="inline w-5 h-5 mr-2"></i>
+                    Schedule Demo
+                </button>
+                <button class="px-8 py-4 rounded-lg font-semibold text-lg border-2 border-white transition-all hover:scale-105" style="background: transparent; color: white;">
+                    <i data-lucide="download" class="inline w-5 h-5 mr-2"></i>
+                    Download White Paper
+                </button>
+            </div>
+            <p class="mt-6 text-sm" style="color: var(--primary-foreground); opacity: 0.8;">
+                Custom Projects • 30-day Delivery • Implementation support included
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12" style="background: var(--card); border-top: 1px solid var(--border);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <img src="Logo.png" alt="GenAI Pharma" class="h-8 w-auto">
+                    </div>
+                    <p class="text-sm mb-4" style="color: var(--muted-foreground);">
+                        Empowering pharmaceutical companies with enterprise-grade GenAI solutions 
+                        for HCP engagement, medical affairs, marketing, HR, and data insights.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-110" style="background: var(--muted); color: var(--muted-foreground);">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-110" style="background: var(--muted); color: var(--muted-foreground);">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-110" style="background: var(--muted); color: var(--muted-foreground);">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Solutions</h4>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li><a href="#" class="hover:text-primary transition-colors">HCP Engagement</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Medical Affairs</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Marketing</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">HR Operations</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Data Insights</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li><a href="#" class="hover:text-primary transition-colors">Documentation</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">API Reference</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Webinars</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm" style="color: var(--muted-foreground);">
+                        <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Partners</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Security</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 text-center text-sm" style="border-top: 1px solid var(--border); color: var(--muted-foreground);">
+                <p>© 2025 GenAI Pharmaceutical Solutions. All rights reserved.</p>
+                <p class="mt-2">
+                    <a href="#" class="hover:text-primary">Privacy Policy</a> • 
+                    <a href="#" class="hover:text-primary">Terms of Service</a> • 
+                    <a href="#" class="hover:text-primary">Compliance</a> • 
+                    <a href="#" class="hover:text-primary">HIPAA</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            lucide.createIcons();
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe feature cards and benefit items
+        document.querySelectorAll('.feature-card, .benefit-item').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
