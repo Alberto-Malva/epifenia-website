@@ -278,8 +278,8 @@
                     with GenAI
                 </h1>
                 <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" style="color: var(--muted-foreground);">
-                    Empower your HCP engagement, medical affairs, marketing, HR, and data analytics 
-                    with cutting-edge generative AI solutions tailored for pharmaceutical excellence.
+                    Empower your HCP Engagement, Medical Affairs, Marketing, HR, and Data Analytics 
+                    with cutting-edge Generative AI Solutions tailored for Pharmaceutical Excellence.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button class="primary-btn text-lg">
@@ -831,6 +831,7 @@
             const colorPrimary = (styles.getPropertyValue('--primary') || '#222').trim();
             const colorSecondary = (styles.getPropertyValue('--secondary') || '#888').trim();
             const neuralOpacity = parseFloat(styles.getPropertyValue('--neural-opacity')) || 0.35;
+            const isTouchDevice = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || 'ontouchstart' in window;
 
             let width = 0;
             let height = 0;
@@ -864,20 +865,25 @@
                 }));
             }
 
-            function onMouseMove(e) {
+            function onPointerMove(e) {
                 const rect = hero.getBoundingClientRect();
-                mouse.x = e.clientX - rect.left;
-                mouse.y = e.clientY - rect.top;
+                const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+                mouse.x = clientX - rect.left;
+                mouse.y = clientY - rect.top;
                 mouse.active = true;
             }
 
-            function onMouseLeave() {
+            function onPointerEnd() {
                 mouse.active = false;
             }
 
             window.addEventListener('resize', resize);
-            hero.addEventListener('mousemove', onMouseMove);
-            hero.addEventListener('mouseleave', onMouseLeave);
+            hero.addEventListener('pointermove', onPointerMove, { passive: true });
+            hero.addEventListener('pointerdown', onPointerMove, { passive: true });
+            hero.addEventListener('pointerup', onPointerEnd);
+            hero.addEventListener('pointercancel', onPointerEnd);
+            hero.addEventListener('pointerleave', onPointerEnd);
 
             const connectionDistance = 140;
             const mouseRadius = 100;
@@ -886,7 +892,8 @@
                 ctx.clearRect(0, 0, width, height);
 
                 let offsetX = 0, offsetY = 0;
-                if (mouse.active) {
+                // Disable parallax offset on touch to avoid sudden jumps
+                if (mouse.active && !isTouchDevice) {
                     offsetX = ((mouse.x / width) - 0.5) * 2;
                     offsetY = ((mouse.y / height) - 0.5) * 2;
                 }
@@ -907,11 +914,12 @@
                         const distSq = dx * dx + dy * dy;
                         if (distSq < mouseRadius * mouseRadius) {
                             const invDist = 1 / Math.sqrt(distSq + 0.0001);
-                            const force = (mouseRadius * invDist) * 0.0006;
+                            const force = (mouseRadius * invDist) * (isTouchDevice ? 0.0003 : 0.0006);
                             n.vx += dx * force;
                             n.vy += dy * force;
-                            n.vx *= 0.975;
-                            n.vy *= 0.975;
+                            const damp = isTouchDevice ? 0.98 : 0.975;
+                            n.vx *= damp;
+                            n.vy *= damp;
                         }
                     }
 
