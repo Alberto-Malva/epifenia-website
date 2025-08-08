@@ -217,6 +217,9 @@
             background: var(--accent);
             color: var(--accent-foreground);
         }
+        
+        /* Improve touch behavior on hero: allow vertical scrolling, avoid gesture conflicts */
+        #hero { touch-action: pan-y; }
     </style>
 </head>
 <body>
@@ -832,6 +835,8 @@
             const colorSecondary = (styles.getPropertyValue('--secondary') || '#888').trim();
             const neuralOpacity = parseFloat(styles.getPropertyValue('--neural-opacity')) || 0.35;
             const isTouchDevice = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || 'ontouchstart' in window;
+            let isScrolling = false;
+            let scrollTimer = null;
 
             let width = 0;
             let height = 0;
@@ -866,6 +871,10 @@
             }
 
             function onPointerMove(e) {
+                if (isTouchDevice && (isScrolling || e.pointerType === 'touch' && document.scrollingElement && document.scrollingElement.scrollTop !== 0)) {
+                    // Ignore moves while the page is scrolling to avoid jumps
+                    return;
+                }
                 const rect = hero.getBoundingClientRect();
                 const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
                 const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
@@ -884,6 +893,12 @@
             hero.addEventListener('pointerup', onPointerEnd);
             hero.addEventListener('pointercancel', onPointerEnd);
             hero.addEventListener('pointerleave', onPointerEnd);
+            // Track scrolling state to throttle pointer reactions on touch
+            window.addEventListener('scroll', () => {
+                isScrolling = true;
+                if (scrollTimer) clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => { isScrolling = false; }, 120);
+            }, { passive: true });
 
             const connectionDistance = 140;
             const mouseRadius = 100;
@@ -951,7 +966,7 @@
                 }
 
                 // Highlight connections to mouse
-                if (mouse.active) {
+                if (mouse.active && !(isTouchDevice && isScrolling)) {
                     for (let i = 0; i < nodes.length; i++) {
                         const n = nodes[i];
                         const dx = mouse.x - n.x;
