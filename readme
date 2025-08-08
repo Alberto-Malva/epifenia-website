@@ -1,0 +1,59 @@
+Parametri principali e come modificarli
+Densità dei nodi (quanti “punti” sul canvas)
+Dove: initNodes calcola targetCount con (width * height) / 16000, clamp 60–140.
+Effetto: numero di nodi (più denso = più connessioni).
+Modifica: diminuisci 16000 per più nodi; cambia i limiti 60/140 per nuovi min/max.
+}
+Velocità dei nodi
+Dove: vx/vy iniziali.
+Effetto: movimento più lento/veloce.
+Modifica: cambia 0.4 (es. 0.2 più lento, 0.8 più veloce).
+Dimensione dei nodi
+Dove: r: 1 + Math.random() * 2.
+Effetto: cerchi più grandi/piccoli.
+Modifica: aumenta/diminuisci 1 e/o 2.
+Distanza di collegamento tra nodi
+Dove: connectionDistance = 140.
+Effetto: più/meno linee tra nodi.
+Modifica: aumenta per più connessioni, riduci per meno.
+;
+Raggio di interazione del mouse
+Dove: mouseRadius = 160.
+Effetto: area in cui i nodi “sentono” il mouse.
+Modifica: aumenta per un effetto più ampio.
+Forza e damping verso il mouse
+Dove: force = ... * 0.002 e n.vx/vy *= 0.985.
+Effetto: attrazione e smorzamento.
+Modifica: aumenta 0.002 per più attrazione; avvicina 0.985 a 1 per meno smorzamento.
+}
+Parallax/offset col mouse
+Dove: moltiplicatori * 10.
+Effetto: quanto “scivola” la rete al muovere il mouse.
+Modifica: aumenta per un effetto più evidente, riduci per più discrezione.
+}
+Opacità delle linee
+Dove: variabile CSS --neural-opacity e clamp minimo Math.max(0.08, ...).
+Effetto: trasparenza generale dei collegamenti.
+Modifica: cambia --neural-opacity in CSS; opzionale riduci 0.08 per linee ancora più sottili.
+}
+;
+Spessore delle linee
+Dove: Math.max(0.5, t * 1.5).
+Effetto: linee più sottili/spesse.
+Modifica: cambia 0.5 (minimo) e 1.5 (scaling).
+Evidenziazione verso il mouse
+Dove: blocco “Highlight connections to mouse”.
+Parametri: soglia 0.75, opacità 0.6, spessore 1.2 + t * 1.8.
+Effetto: scie/collegamenti verso il cursore.
+;
+Risoluzione/performance (DPR cap)
+Dove: Math.min(window.devicePixelRatio || 1, 2).
+Effetto: qualità vs performance su schermi ad alta densità.
+Modifica: abbassa 2 per migliorare performance su device lenti.
+;
+Colori delle linee/nodi
+Dove: variabili CSS --primary e --secondary.
+Effetto: colore dei collegamenti (linee) e dei nodi.
+Modifica: cambia le variabili nel tema.
+;
+Vuoi che imposti io dei valori “più energici” o “più discreti”? Dimmi lo stile e li applico subito.
