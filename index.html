@@ -840,6 +840,8 @@
 
             let width = 0;
             let height = 0;
+            let lastWidth = 0;
+            let lastHeight = 0;
             let deviceRatio = 1;
             let nodes = [];
             const mouse = { x: 0, y: 0, active: false };
@@ -856,7 +858,23 @@
                 canvas.style.height = height + 'px';
                 ctx.setTransform(deviceRatio, 0, 0, deviceRatio, 0, 0);
 
-                initNodes();
+                if (lastWidth === 0 || lastHeight === 0 || nodes.length === 0) {
+                    // first init
+                    initNodes();
+                } else {
+                    // scale existing nodes to new size to avoid re-initialization jumps
+                    const scaleX = width / lastWidth;
+                    const scaleY = height / lastHeight;
+                    for (let i = 0; i < nodes.length; i++) {
+                        nodes[i].x *= scaleX;
+                        nodes[i].y *= scaleY;
+                        nodes[i].vx *= scaleX;
+                        nodes[i].vy *= scaleY;
+                    }
+                }
+
+                lastWidth = width;
+                lastHeight = height;
             }
 
             function initNodes() {
@@ -887,7 +905,11 @@
                 mouse.active = false;
             }
 
-            window.addEventListener('resize', resize);
+            let resizeDebounce;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeDebounce);
+                resizeDebounce = setTimeout(resize, 150);
+            });
             hero.addEventListener('pointermove', onPointerMove, { passive: true });
             hero.addEventListener('pointerdown', onPointerMove, { passive: true });
             hero.addEventListener('pointerup', onPointerEnd);
@@ -927,14 +949,21 @@
                         const dx = mouse.x - n.x;
                         const dy = mouse.y - n.y;
                         const distSq = dx * dx + dy * dy;
-                        if (distSq < mouseRadius * mouseRadius) {
+                        const effectiveR = isTouchDevice ? 70 : mouseRadius;
+                        if (distSq < effectiveR * effectiveR) {
                             const invDist = 1 / Math.sqrt(distSq + 0.0001);
-                            const force = (mouseRadius * invDist) * (isTouchDevice ? 0.0003 : 0.0006);
+                            const force = (effectiveR * invDist) * (isTouchDevice ? 0.0002 : 0.0006);
                             n.vx += dx * force;
                             n.vy += dy * force;
-                            const damp = isTouchDevice ? 0.98 : 0.975;
+                            const damp = isTouchDevice ? 0.985 : 0.975;
                             n.vx *= damp;
                             n.vy *= damp;
+                            // Clamp velocity to avoid sudden jumps on touch
+                            const maxSpeed = isTouchDevice ? 0.6 : 1.2;
+                            if (n.vx > maxSpeed) n.vx = maxSpeed;
+                            if (n.vx < -maxSpeed) n.vx = -maxSpeed;
+                            if (n.vy > maxSpeed) n.vy = maxSpeed;
+                            if (n.vy < -maxSpeed) n.vy = -maxSpeed;
                         }
                     }
 
@@ -972,8 +1001,9 @@
                         const dx = mouse.x - n.x;
                         const dy = mouse.y - n.y;
                         const dist = Math.hypot(dx, dy);
-                        if (dist < mouseRadius * 0.75) {
-                            const t = 1 - (dist / (mouseRadius * 0.75));
+                        const effectiveR = isTouchDevice ? 70 : mouseRadius;
+                        if (dist < effectiveR * 0.75) {
+                            const t = 1 - (dist / (effectiveR * 0.75));
                             ctx.strokeStyle = colorSecondary;
                             ctx.globalAlpha = Math.max(0.06, t * 0.35);
                             ctx.lineWidth = 0.8 + t * 1.2;
